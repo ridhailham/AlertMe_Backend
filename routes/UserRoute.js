@@ -75,9 +75,9 @@ router.use(function(req, res, next) {
 // Route untuk upload KTP
 router.post('/user/ktp', verifyToken, uploadktp.single('ktp'), createKTP);
 
-router.get('/users/:id', verifyToken, getUserById);
-router.put('/users/:id',  verifyToken, updatePassword)
-router.put('/users/:id', verifyToken, updateName)
+router.get('/user/:id', verifyToken, getUserById);
+router.put('/user/:id/password',  verifyToken, updatePassword)
+router.put('/user/:id/name', updateName)
 
 
 

@@ -96,11 +96,15 @@ exports.updatePassword = async (req, res) => {
 
 exports.updateName = async (req, res) => {
     try {
+        console.log("haloooo");
         const user = await User.findOne({
             where: {
                 uuid: req.params.id
             }
         });
+
+        console.log("haloooo");
+        
 
         if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
 

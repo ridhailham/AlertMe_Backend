@@ -2,6 +2,7 @@ const Kantor = require("../models/KantorModel.js");
 const Laporan = require("../models/LaporanModel");
 const User = require("../models/UserModel.js");
 const { Op } = require("sequelize");
+const dayjs = require('dayjs')
 
 // Membuat laporan baru
 exports.createLaporan = async (req, res) => {
@@ -73,7 +74,7 @@ exports.getLaporan = async (req, res) => {
                 {
                     model: Kantor,
                     as: 'kantor', // Alias untuk Kantor
-                    attributes: ['name', 'jenis_petugas', 'alamat_kantor'],
+                    attributes: ['name', 'jenis_petugas', 'alamat'],
                 },
             ],
         });
@@ -87,7 +88,8 @@ exports.getLaporan = async (req, res) => {
 
 
 
-// Mendapatkan laporan berdasarkan ID
+;
+
 exports.getLaporanById = async (req, res) => {
     try {
         const laporan = await Laporan.findOne({
@@ -99,7 +101,9 @@ exports.getLaporanById = async (req, res) => {
                 'alamat_kantor',
                 'lokasi_kejadian',
                 'image',
-                'status'
+                'status',
+                
+                'createdAt'
             ],
             where: { uuid: req.params.id },
             include: [
@@ -111,7 +115,7 @@ exports.getLaporanById = async (req, res) => {
                 {
                     model: Kantor,
                     as: 'kantor', // Alias untuk Kantor
-                    attributes: ['name', 'jenis_petugas', 'alamat_kantor'],
+                    attributes: ['name', 'jenis_petugas', 'alamat', 'telfon'],
                 },
             ],
         });
@@ -120,7 +124,13 @@ exports.getLaporanById = async (req, res) => {
             return res.status(404).json({ message: "Laporan tidak ditemukan" });
         }
 
-        res.status(200).json(laporan);
+        // Format `createdAt` agar lebih rapi
+        const formattedLaporan = {
+            ...laporan.dataValues,
+            createdAt: dayjs(laporan.createdAt).format('DD-MM-YYYY HH:mm:ss'), // Format sesuai kebutuhan
+        };
+
+        res.status(200).json(formattedLaporan);
     } catch (error) {
         console.error("Error detail:", error);
         res.status(500).json({ message: "Terjadi kesalahan pada server" });
